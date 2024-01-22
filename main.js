@@ -1,5 +1,5 @@
-const { app, BrowserWindow, ipcMain, desktopCapturer } = require('electron');
-const { writeFile } = require('fs');
+const { app, BrowserWindow, ipcMain } = require('electron');
+const fs = require('fs');
 const path = require('path');
 
 require('electron-reload')(__dirname);
@@ -32,7 +32,7 @@ ipcMain.on('startRecording', (event, deviceId) => {
         const blob = new Blob(chunks, { type: 'audio/wav' });
         const filePath = 'recordedAudio.wav';
 
-        writeFile(filePath, Buffer.from(blob), (err) => {
+        fs.writeFile(filePath, Buffer.from(blob), (err) => {
           if (err) throw err;
           console.log('Audio saved successfully!');
         });
@@ -45,8 +45,8 @@ ipcMain.on('startRecording', (event, deviceId) => {
 
 app.on('ready', () => {
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1400,
+    height: 1000,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -56,8 +56,7 @@ app.on('ready', () => {
 
   mainWindow.loadFile('./src/index.html');
 
-  mainWindow.window.ipcMain = ipcMain;
-
+  mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', () => {
     app.quit();
@@ -66,16 +65,13 @@ app.on('ready', () => {
 
 
 ipcMain.on('saveSetting', (event, key, value) => {
-  const configPath = path.join(app.getPath('userData'), 'config.json');
+  const configPath = './config.json';
 
   try {
-    // Read existing settings or initialize an empty object
     const existingSettings = readSettings();
 
-    // Update the specific setting
     existingSettings[key] = value;
 
-    // Write updated settings to the config file
     fs.writeFileSync(configPath, JSON.stringify(existingSettings, null, 2), 'utf-8');
   } catch (error) {
     console.error('Error saving setting:', error.message);
@@ -83,20 +79,57 @@ ipcMain.on('saveSetting', (event, key, value) => {
 })
 
 ipcMain.on('readSetting', (event, key) => {
-  const configPath = path.join(app.getPath('userData'), 'config.json');
+  const configPath = './config.json';
+  generateFile(configPath);
 
   try {
-    // Read the content of the config file
     const data = fs.readFileSync(configPath, 'utf-8');
 
-    // Parse the JSON data
     const settings = JSON.parse(data);
 
-    // Return the specific setting
     return settings[key];
   } catch (error) {
-    // If the file doesn't exist or there's an error, return null
     console.error('Error reading setting:', error.message);
     return null;
   }
 })
+
+function readSettings() {
+  const configPath = './config.json';
+  generateFile(configPath);
+
+  try {
+    const data = fs.readFileSync(configPath, 'utf-8');
+
+    const settings = JSON.parse(data);
+
+    return settings;
+  } catch (error) {
+    console.error('Error reading setting:', error.message);
+    return null;
+  }
+}
+
+function fileExists(filePath) {
+  try {
+    // Check if the file exists
+    fs.accessSync(filePath, fs.constants.F_OK);
+    return true;
+  } catch (error) {
+    // File doesn't exist
+    return false;
+  }
+}
+
+// Function to generate a file if it doesn't exist
+function generateFile(filePath) {
+  if (!fileExists(filePath)) {
+    try {
+      // Write content to the file
+      fs.writeFileSync(filePath, "{}", 'utf-8');
+      console.log(`Config generated!`);
+    } catch (error) {
+      console.error('Error generating file:', error.message);
+    }
+  }
+}

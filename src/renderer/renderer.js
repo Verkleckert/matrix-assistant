@@ -1,5 +1,4 @@
 const ipcRenderer = window.ipcRenderer;
-const ipcMain = window.ipcMain;
 
 const startRecordBtn = document.getElementById('startRecord');
 const stopRecordBtn = document.getElementById('stopRecord');
@@ -17,7 +16,7 @@ stopRecordBtn.addEventListener('click', () => {
 audioDevicesSelect.addEventListener('change', function(event) {
   const selectedValue = event.target.value;
 
-  ipcMain.send('saveSetting', audioDevice, selectedValue);
+  ipcRenderer.send('saveSetting', 'audioDevice', selectedValue);
   
   console.log('Selected audio device:', selectedValue);
 });
