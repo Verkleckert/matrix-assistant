@@ -2,10 +2,12 @@
   "name": "matrix-assistant",
   "version": "1.0.0",
   "description": "An assistant for programmers",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron-forge start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,21 @@
   },
   "homepage": "https://github.com/Verkleckert/matrix-assistant#readme",
   "devDependencies": {
-    "electron": "^28.1.4"
+    "@babel/core": "^7.23.7",
+    "@babel/preset-env": "^7.23.8",
+    "@electron-forge/cli": "^7.2.0",
+    "@electron-forge/maker-deb": "^7.2.0",
+    "@electron-forge/maker-rpm": "^7.2.0",
+    "@electron-forge/maker-squirrel": "^7.2.0",
+    "@electron-forge/maker-zip": "^7.2.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.2.0",
+    "babel-loader": "^9.1.3",
+    "electron": "^28.1.4",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
+    "node-microphone": "^0.1.6",
+    "path": "^0.12.7"
   }
 }

@@ -1,0 +1,13 @@
+@font-face {
+  font-family: MouseoModerno;
+  src: url(./fonts/MuseoModerno-VariableFont_wght.ttf);
+}
+
+* {
+  font-family: MouseoModerno, sans-serif;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}

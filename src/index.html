@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrix Assistant</title>
+  <link rel="stylesheet" href="./renderer/styles/style.css">
+</head>
+
+<body>
+  <h1>Matrix Assistant</h1>
+  We are using Node.js <span id="node-version"></span>,
+  Chromium <span id="chrome-version"></span>,
+  and Electron <span id="electron-version"></span>.
+
+  <h1>Audio Recorder</h1>
+  <button id="startRecord">Start Recording</button>
+  <button id="stopRecord">Stop Recording</button>
+  <select id="audioDevices"></select>
+
+  <script src="./renderer/audioRecorder.js"></script>
+  <script src="./renderer/renderer.js"></script>
+</body>
+
+</html>
