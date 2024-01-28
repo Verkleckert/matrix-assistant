@@ -1,8 +1,14 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
+const fsPromises = require('fs').promises;
 const fs = require('fs');
 const path = require('path');
 
-require('electron-reload')(__dirname);
+const ignoredNode  = /node_modules|[/\\]\./;
+const config  = /config.json|[/\\]\./;
+
+if (process.env.NODE_ENV !== 'production'){
+  require('electron-reload')(__dirname, {ignored: [ignoredNode, config] })
+}
 
 let recorder;
 let audioStream;
@@ -45,7 +51,7 @@ ipcMain.on('startRecording', (event, deviceId) => {
 
 app.on('ready', () => {
   const mainWindow = new BrowserWindow({
-    width: 1400,
+    width: 1600,
     height: 1000,
     webPreferences: {
       nodeIntegration: true,
@@ -63,20 +69,29 @@ app.on('ready', () => {
   });
 });
 
-
 ipcMain.on('saveSetting', (event, key, value) => {
   const configPath = './config.json';
 
   try {
-    const existingSettings = readSettings();
+    let existingSettings = readSettings();
+
+    if (!existingSettings) {
+      // Handle the case where the settings file is empty or not found
+      existingSettings = {};
+    }
 
     existingSettings[key] = value;
 
-    fs.writeFileSync(configPath, JSON.stringify(existingSettings, null, 2), 'utf-8');
+    writeData = JSON.stringify(existingSettings, null, 2);
+
+    console.log(writeData)
+
+    fs.writeFileSync(configPath, writeData);
+
   } catch (error) {
     console.error('Error saving setting:', error.message);
   }
-})
+});
 
 ipcMain.on('readSetting', (event, key) => {
   const configPath = './config.json';
@@ -101,11 +116,11 @@ function readSettings() {
   try {
     const data = fs.readFileSync(configPath, 'utf-8');
 
-    const settings = JSON.parse(data);
+    return JSON.parse(data);
 
-    return settings;
   } catch (error) {
-    console.error('Error reading setting:', error.message);
+    // Handle the case where the settings file is empty or not found
+    console.error('Error reading settings:', error.message);
     return null;
   }
 }

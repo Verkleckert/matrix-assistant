@@ -16,7 +16,11 @@ stopRecordBtn.addEventListener('click', () => {
 audioDevicesSelect.addEventListener('change', function(event) {
   const selectedValue = event.target.value;
 
-  ipcRenderer.send('saveSetting', 'audioDevice', selectedValue);
+//   // try {
+    ipcRenderer.send('saveSetting', 'audioDevice', selectedValue);
   
-  console.log('Selected audio device:', selectedValue);
+    console.log('Selected audio device:', selectedValue);
+//   // } catch (error) {
+//   //   console.error('Error handling audio device change:', error.message);
+//   // }
 });
