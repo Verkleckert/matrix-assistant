@@ -16,3 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   console.log('Preload script executed past DOM-Loaded');
 })
+
+ipcRenderer.on('error', (event, error) => {
+  console.error('IPC Error:', error);
+});

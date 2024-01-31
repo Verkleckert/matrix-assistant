@@ -13,42 +13,6 @@ if (process.env.NODE_ENV !== 'production'){
 let recorder;
 let audioStream;
 
-ipcMain.on('stopRecording', () => {
-  if (recorder) {
-    recorder.stop();
-    audioStream.getTracks().forEach((track) => track.stop());
-  }
-});
-
-ipcMain.on('startRecording', (event, deviceId) => {
-  navigator.mediaDevices
-    .getUserMedia({ audio: { deviceId: deviceId ? { exact: deviceId } : undefined } })
-    .then((stream) => {
-      audioStream = stream;
-      recorder = new MediaRecorder(stream);
-      const chunks = [];
-
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          chunks.push(e.data);
-        }
-      };
-
-      recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/wav' });
-        const filePath = 'recordedAudio.wav';
-
-        fs.writeFile(filePath, Buffer.from(blob), (err) => {
-          if (err) throw err;
-          console.log('Audio saved successfully!');
-        });
-      };
-
-      recorder.start();
-    })
-    .catch((err) => console.error(err));
-});
-
 app.on('ready', () => {
   const mainWindow = new BrowserWindow({
     width: 1600,
@@ -108,6 +72,14 @@ ipcMain.on('readSetting', (event, key) => {
     return null;
   }
 })
+
+function readSetting(key) {
+  settingsData = readSettings();
+
+  settingsData.parse();
+
+  return settingsData[key]
+}
 
 function readSettings() {
   const configPath = './config.json';
