@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-const fsPromises = require('fs').promises;
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 const ignoredNode  = /node_modules|[/\\]\./;
 const config  = /config.json|[/\\]\./;

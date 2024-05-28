@@ -1,4 +1,3 @@
-// Fetch audio sources using desktopCapturer
 async function getAudioSources() {
   try {
     navigator.mediaDevices
@@ -9,7 +8,7 @@ async function getAudioSources() {
             const option = document.createElement('option');
             option.value = device.deviceId;
             option.text = device.label;
-            const audioDevicesSelect = document.getElementById('audioDevices');
+            // const audioDevicesSelect = document.getElementById('audioDevices');
             audioDevicesSelect.add(option);
           }
         });
